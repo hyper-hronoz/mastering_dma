@@ -1,0 +1,4 @@
+/home/hronoz/mastering_dma/CMakeFiles/can.elf.dir
+/home/hronoz/mastering_dma/CMakeFiles/flash.dir
+/home/hronoz/mastering_dma/CMakeFiles/edit_cache.dir
+/home/hronoz/mastering_dma/CMakeFiles/rebuild_cache.dir

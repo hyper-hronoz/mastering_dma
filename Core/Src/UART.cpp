@@ -52,12 +52,25 @@ void UART::configure_UART(UART_INRQ header) {
   USART1->CR1 &= ~(USART_CR1_RE_Msk);
   USART1->CR1 |= (header.enable_reciever << USART_CR1_RE_Pos);
 
-  USART1->CR1 |= USART_CR1_RXNEIE;
+  // USART1->CR1 |= USART_CR1_RXNEIE;
   // USART1->CR1 |= USART_CR1_IDLEIE;
-  NVIC_EnableIRQ(USART1_IRQn);
+  // NVIC_EnableIRQ(USART1_IRQn);
 }
 
-void UART::enable_dma() {
+void UART::enable_dma_rx() {
+  USART1->CR3 |= USART_CR3_DMAR;
+}
+
+void UART::enable_dma_tx() {
+  USART1->CR3 |= USART_CR3_DMAT;
+}
+
+void UART::disable_dma_rx() {
+  USART1->CR3 &= ~(USART_CR3_DMAR);
+}
+
+void UART::disable_dma_tx() {
+  USART1->CR3 &= ~(USART_CR3_DMAT);
 }
 
 void UART::__init__(UART_INRQ header) {

@@ -21,7 +21,13 @@ class UART {
   public:
     void __init__(UART_INRQ header);
 
-    void enable_dma();
+    void enable_dma_rx();
+
+    void enable_dma_tx();
+
+    void disable_dma_rx();
+
+    void disable_dma_tx();
 
     void recieve();
 

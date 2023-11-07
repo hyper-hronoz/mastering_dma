@@ -3,7 +3,7 @@
 #include "stm32f1xx.h"
 #include "Clock.h"
 
-#define BUFFER_SIZE 10 
+#define BUFFER_SIZE 64 
 
 uint8_t uartRxBuffer[BUFFER_SIZE];
 uint8_t uartTxBuffer[BUFFER_SIZE];
@@ -98,11 +98,11 @@ int main(void) {
   SystemCoreClockUpdate();
   __IO uint32_t clock_value = SystemCoreClock;
 
-  Delay().__init__(8);
+  Delay().__init__(36);
 
   uint8_t msg[] = "fuck";
   while (1) {
     USART1_Transmit(uartRxBuffer, sizeof(uartRxBuffer));
-    Delay().wait(6000);
+    Delay().wait(3000);
   }
 }

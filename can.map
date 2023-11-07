@@ -1758,7 +1758,7 @@ LOAD /usr/bin/../lib/gcc/arm-none-eabi/12.2.1/thumb/v7-m/nofp/crtn.o
  .igot.plt      0x000000002000000c        0x0 /usr/bin/../lib/gcc/arm-none-eabi/12.2.1/thumb/v7-m/nofp/crtbegin.o
                 0x000000002000000c                . = ALIGN (0x4)
 
-.bss            0x000000002000000c      0x1dc load address 0x0000000008001bf8
+.bss            0x000000002000000c      0x244 load address 0x0000000008001bf8
                 0x000000002000000c                _sbss = .
                 0x000000002000000c                __bss_start__ = _sbss
  *(.bss)
@@ -1768,42 +1768,40 @@ LOAD /usr/bin/../lib/gcc/arm-none-eabi/12.2.1/thumb/v7-m/nofp/crtn.o
  *fill*         0x000000002000000d        0x3 
  .bss.object.0  0x0000000020000010       0x18 /usr/bin/../lib/gcc/arm-none-eabi/12.2.1/thumb/v7-m/nofp/crtbegin.o
  .bss.uartRxBuffer
-                0x0000000020000028        0xa CMakeFiles/can.elf.dir/Core/Src/main.cpp.obj
+                0x0000000020000028       0x40 CMakeFiles/can.elf.dir/Core/Src/main.cpp.obj
                 0x0000000020000028                uartRxBuffer
- *fill*         0x0000000020000032        0x2 
  .bss.uartTxBuffer
-                0x0000000020000034        0xa CMakeFiles/can.elf.dir/Core/Src/main.cpp.obj
-                0x0000000020000034                uartTxBuffer
- *fill*         0x000000002000003e        0x2 
+                0x0000000020000068       0x40 CMakeFiles/can.elf.dir/Core/Src/main.cpp.obj
+                0x0000000020000068                uartTxBuffer
  .bss.clock_header
-                0x0000000020000040        0xc CMakeFiles/can.elf.dir/Core/Src/main.cpp.obj
-                0x0000000020000040                clock_header
- .bss.uwTick    0x000000002000004c        0x4 CMakeFiles/can.elf.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.obj
-                0x000000002000004c                uwTick
- .bss.__atexit  0x0000000020000050        0x4 /usr/bin/../lib/gcc/arm-none-eabi/12.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc.a(libc_a-__call_atexit.o)
-                0x0000000020000050                __atexit
+                0x00000000200000a8        0xc CMakeFiles/can.elf.dir/Core/Src/main.cpp.obj
+                0x00000000200000a8                clock_header
+ .bss.uwTick    0x00000000200000b4        0x4 CMakeFiles/can.elf.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.obj
+                0x00000000200000b4                uwTick
+ .bss.__atexit  0x00000000200000b8        0x4 /usr/bin/../lib/gcc/arm-none-eabi/12.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc.a(libc_a-__call_atexit.o)
+                0x00000000200000b8                __atexit
  .bss.__lock___atexit_recursive_mutex
-                0x0000000020000054        0x1 /usr/bin/../lib/gcc/arm-none-eabi/12.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc.a(libc_a-lock.o)
-                0x0000000020000054                __lock___atexit_recursive_mutex
- *fill*         0x0000000020000055        0x3 
+                0x00000000200000bc        0x1 /usr/bin/../lib/gcc/arm-none-eabi/12.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc.a(libc_a-lock.o)
+                0x00000000200000bc                __lock___atexit_recursive_mutex
+ *fill*         0x00000000200000bd        0x3 
  .bss.__atexit0
-                0x0000000020000058      0x190 /usr/bin/../lib/gcc/arm-none-eabi/12.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc.a(libc_a-__atexit.o)
-                0x0000000020000058                __atexit0
+                0x00000000200000c0      0x190 /usr/bin/../lib/gcc/arm-none-eabi/12.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc.a(libc_a-__atexit.o)
+                0x00000000200000c0                __atexit0
  *(COMMON)
-                0x00000000200001e8                . = ALIGN (0x4)
-                0x00000000200001e8                _ebss = .
-                0x00000000200001e8                __bss_end__ = _ebss
+                0x0000000020000250                . = ALIGN (0x4)
+                0x0000000020000250                _ebss = .
+                0x0000000020000250                __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x00000000200001e8      0x600 load address 0x0000000008001bf8
-                0x00000000200001e8                . = ALIGN (0x8)
-                0x00000000200001e8                PROVIDE (end = .)
+                0x0000000020000250      0x600 load address 0x0000000008001bf8
+                0x0000000020000250                . = ALIGN (0x8)
+                0x0000000020000250                PROVIDE (end = .)
                 [!provide]                        PROVIDE (_end = .)
-                0x00000000200003e8                . = (. + _Min_Heap_Size)
- *fill*         0x00000000200001e8      0x200 
-                0x00000000200007e8                . = (. + _Min_Stack_Size)
- *fill*         0x00000000200003e8      0x400 
-                0x00000000200007e8                . = ALIGN (0x8)
+                0x0000000020000450                . = (. + _Min_Heap_Size)
+ *fill*         0x0000000020000250      0x200 
+                0x0000000020000850                . = (. + _Min_Stack_Size)
+ *fill*         0x0000000020000450      0x400 
+                0x0000000020000850                . = ALIGN (0x8)
 
 /DISCARD/
  libc.a(*)
@@ -1863,25 +1861,25 @@ LOAD /usr/bin/../lib/gcc/arm-none-eabi/12.2.1/../../../../arm-none-eabi/lib/thum
 LOAD /usr/bin/../lib/gcc/arm-none-eabi/12.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp/libm.a
 LOAD /usr/bin/../lib/gcc/arm-none-eabi/12.2.1/thumb/v7-m/nofp/libgcc.a
 
-.debug_info     0x0000000000000000     0x2092
+.debug_info     0x0000000000000000     0x208d
  .debug_info    0x0000000000000000      0x5b2 CMakeFiles/can.elf.dir/Core/Src/Clock.cpp.obj
  .debug_info    0x00000000000005b2      0x3c3 CMakeFiles/can.elf.dir/Core/Src/Delay.cpp.obj
  .debug_info    0x0000000000000975      0x368 CMakeFiles/can.elf.dir/Core/Src/LED.cpp.obj
- .debug_info    0x0000000000000cdd      0x961 CMakeFiles/can.elf.dir/Core/Src/main.cpp.obj
- .debug_info    0x000000000000163e      0x10f CMakeFiles/can.elf.dir/Core/Src/stm32f1xx_it.c.obj
- .debug_info    0x000000000000174d      0x217 CMakeFiles/can.elf.dir/Core/Src/system_stm32f1xx.c.obj
- .debug_info    0x0000000000001964      0x700 CMakeFiles/can.elf.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.obj
- .debug_info    0x0000000000002064       0x2e CMakeFiles/can.elf.dir/startup_stm32f103xb.s.obj
+ .debug_info    0x0000000000000cdd      0x95c CMakeFiles/can.elf.dir/Core/Src/main.cpp.obj
+ .debug_info    0x0000000000001639      0x10f CMakeFiles/can.elf.dir/Core/Src/stm32f1xx_it.c.obj
+ .debug_info    0x0000000000001748      0x217 CMakeFiles/can.elf.dir/Core/Src/system_stm32f1xx.c.obj
+ .debug_info    0x000000000000195f      0x700 CMakeFiles/can.elf.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.obj
+ .debug_info    0x000000000000205f       0x2e CMakeFiles/can.elf.dir/startup_stm32f103xb.s.obj
 
-.debug_abbrev   0x0000000000000000      0xb93
+.debug_abbrev   0x0000000000000000      0xb83
  .debug_abbrev  0x0000000000000000      0x202 CMakeFiles/can.elf.dir/Core/Src/Clock.cpp.obj
  .debug_abbrev  0x0000000000000202      0x176 CMakeFiles/can.elf.dir/Core/Src/Delay.cpp.obj
  .debug_abbrev  0x0000000000000378      0x179 CMakeFiles/can.elf.dir/Core/Src/LED.cpp.obj
- .debug_abbrev  0x00000000000004f1      0x2d8 CMakeFiles/can.elf.dir/Core/Src/main.cpp.obj
- .debug_abbrev  0x00000000000007c9       0x71 CMakeFiles/can.elf.dir/Core/Src/stm32f1xx_it.c.obj
- .debug_abbrev  0x000000000000083a      0x13d CMakeFiles/can.elf.dir/Core/Src/system_stm32f1xx.c.obj
- .debug_abbrev  0x0000000000000977      0x1ff CMakeFiles/can.elf.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.obj
- .debug_abbrev  0x0000000000000b76       0x1d CMakeFiles/can.elf.dir/startup_stm32f103xb.s.obj
+ .debug_abbrev  0x00000000000004f1      0x2c8 CMakeFiles/can.elf.dir/Core/Src/main.cpp.obj
+ .debug_abbrev  0x00000000000007b9       0x71 CMakeFiles/can.elf.dir/Core/Src/stm32f1xx_it.c.obj
+ .debug_abbrev  0x000000000000082a      0x13d CMakeFiles/can.elf.dir/Core/Src/system_stm32f1xx.c.obj
+ .debug_abbrev  0x0000000000000967      0x1ff CMakeFiles/can.elf.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.obj
+ .debug_abbrev  0x0000000000000b66       0x1d CMakeFiles/can.elf.dir/startup_stm32f103xb.s.obj
 
 .debug_aranges  0x0000000000000000      0x280
  .debug_aranges
@@ -1920,15 +1918,15 @@ LOAD /usr/bin/../lib/gcc/arm-none-eabi/12.2.1/thumb/v7-m/nofp/libgcc.a
  .debug_rnglists
                 0x00000000000001a2       0x19 CMakeFiles/can.elf.dir/startup_stm32f103xb.s.obj
 
-.debug_line     0x0000000000000000     0x1294
+.debug_line     0x0000000000000000     0x1291
  .debug_line    0x0000000000000000      0x2fb CMakeFiles/can.elf.dir/Core/Src/Clock.cpp.obj
  .debug_line    0x00000000000002fb      0x1f7 CMakeFiles/can.elf.dir/Core/Src/Delay.cpp.obj
  .debug_line    0x00000000000004f2      0x1db CMakeFiles/can.elf.dir/Core/Src/LED.cpp.obj
- .debug_line    0x00000000000006cd      0x354 CMakeFiles/can.elf.dir/Core/Src/main.cpp.obj
- .debug_line    0x0000000000000a21      0x170 CMakeFiles/can.elf.dir/Core/Src/stm32f1xx_it.c.obj
- .debug_line    0x0000000000000b91      0x1d7 CMakeFiles/can.elf.dir/Core/Src/system_stm32f1xx.c.obj
- .debug_line    0x0000000000000d68      0x4b4 CMakeFiles/can.elf.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.obj
- .debug_line    0x000000000000121c       0x78 CMakeFiles/can.elf.dir/startup_stm32f103xb.s.obj
+ .debug_line    0x00000000000006cd      0x351 CMakeFiles/can.elf.dir/Core/Src/main.cpp.obj
+ .debug_line    0x0000000000000a1e      0x170 CMakeFiles/can.elf.dir/Core/Src/stm32f1xx_it.c.obj
+ .debug_line    0x0000000000000b8e      0x1d7 CMakeFiles/can.elf.dir/Core/Src/system_stm32f1xx.c.obj
+ .debug_line    0x0000000000000d65      0x4b4 CMakeFiles/can.elf.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.obj
+ .debug_line    0x0000000000001219       0x78 CMakeFiles/can.elf.dir/startup_stm32f103xb.s.obj
 
 .debug_str      0x0000000000000000     0x1003
  .debug_str     0x0000000000000000      0x4f3 CMakeFiles/can.elf.dir/Core/Src/Clock.cpp.obj

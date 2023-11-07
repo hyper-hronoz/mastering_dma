@@ -1,159 +1,48 @@
-#include "Clock.h"
-#include "LED.h"
-#include "UART.h"
+#include "Clock_INRQ.h"
+#include "Delay.h"
 #include "stm32f1xx.h"
+#include "Clock.h"
 
-UART_INRQ uart_header;
-Clock_INRQ clock_header;
+#define BUFFER_SIZE 10 
 
-uint8_t dma_uart_buffer[10] = {0};
-
-extern "C" void USART1_IRQHandler(void) {
-  // __disable_irq();
-
-  // if (USART1->SR & USART_SR_RXNE) {
-  // uint8_t rx = USART1->DR;
-  // UART().transmit(&rx, sizeof(rx));
-  // }
-
-  // __enable_irq();
-}
+uint8_t uartRxBuffer[BUFFER_SIZE];
+uint8_t uartTxBuffer[BUFFER_SIZE];
 
 extern "C" void DMA1_Channel5_IRQHandler(void) {
-  // __disable_irq();
+  // DMA receive complete interrupt handler
+  if (DMA1->ISR & DMA_ISR_TCIF5) {
+    // Data has been received
+    // Process the received data (e.g., echo it back)
+    for (int i = 0; i < BUFFER_SIZE; i++) {
+      uartTxBuffer[i] = uartRxBuffer[i]; // Echo received data
+    }
 
-  LED().led_on();
-  UART().transmit(dma_uart_buffer, sizeof(dma_uart_buffer));
-
-  // clearing interrupt flag
-  DMA1->IFCR |= DMA_IFCR_CTCIF5;
-  DMA1->IFCR |= DMA_IFCR_CHTIF5;
-  DMA1->IFCR |= DMA_IFCR_CTCIF5;
-  DMA1->IFCR |= DMA_IFCR_CGIF5;
-
-  // __enable_irq();
+    // Clear the DMA receive interrupt flag
+    DMA1->IFCR = DMA_IFCR_CTCIF5;
+  }
 }
 
-typedef struct {
-  uint8_t priority = 0;
-  uint8_t mem_size = 0;
-  uint8_t peripheral_size = 0;
-  uint8_t enable_mem2mem = 0;
-  uint8_t enable_mem_increment = 0;
-  uint8_t enable_peripheral_increment = 0;
-  uint8_t enable_circular_mode = 0;
-  uint8_t data_transfer_direction = 0;
-  uint8_t enable_error_interrupt = 0;
-  uint8_t enable_half_transfer_interrupt = 0;
-  uint8_t enable_transfer_cmpl_interrupt = 0;
-  uint8_t enable_channel = 0;
+void USART1_Transmit(uint8_t *data, uint16_t length) {
+  for (uint16_t i = 0; i < length; i++) {
+    // Wait for the UART data register to be empty
+    while (!(USART1->SR & USART_SR_TXE))
+      ;
 
-  uint8_t data_number_transfer = 0;
-
-  uint32_t memory_address = 0;
-  uint32_t peripheral_address = 0;
-} DMA_INRQ;
-
-DMA_INRQ uart_dma_header;
-
-class DMA {
-private:
-  void configure_interrupts(DMA_INRQ header) {
-    // enbling interrupt
-    //
-
-    DMA1_Channel5->CCR |= DMA_CCR_TCIE;
-    DMA1_Channel5->CCR |= DMA_CCR_HTIE;
-    DMA1_Channel5->CCR |= DMA_CCR_TEIE;
-
-    DMA1->IFCR |= DMA_IFCR_CTEIF5;
-    DMA1->IFCR |= DMA_IFCR_CHTIF5;
-    DMA1->IFCR |= DMA_IFCR_CTCIF5;
-    DMA1->IFCR |= DMA_IFCR_CGIF5;
-
-    NVIC_SetPriority(DMA1_Channel5_IRQn, 0);
-    NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+    // Send the character
+    USART1->DR = data[i];
+    // Wait for the last character to be transmitted
+    while (!(USART1->SR & USART_SR_TC))
+      ;
   }
+}
 
-  void configure_priority(DMA_INRQ header) {
-    // priority
-    DMA1_Channel5->CCR &= ~(DMA_CCR_PL_Msk);
-    DMA1_Channel5->CCR |= header.priority << DMA_CCR_PL_Pos;
-  }
+Clock_INRQ clock_header;
 
-public:
-  void __init__(DMA_INRQ header) {
-    RCC->AHBENR |= RCC_AHBENR_DMA1EN;
-
-    DMA1_Channel5->CCR &= ~(DMA_CCR_MEM2MEM_Msk);
-    DMA1_Channel5->CCR |= header.enable_mem2mem << DMA_CCR_MEM2MEM_Pos;
-
-    DMA1_Channel5->CCR &= (DMA_CCR_PSIZE_Msk);
-    DMA1_Channel5->CCR |= header.peripheral_size << DMA_CCR_PSIZE_Pos;
-
-    DMA1_Channel5->CCR &= (DMA_CCR_MSIZE_Msk);
-    DMA1_Channel5->CCR |= header.mem_size << DMA_CCR_MSIZE_Pos;
-
-    DMA1_Channel5->CCR &= (DMA_CCR_MINC_Msk);
-    DMA1_Channel5->CCR |= header.enable_mem_increment << DMA_CCR_MINC_Pos;
-
-    DMA1_Channel5->CCR &= (DMA_CCR_PINC_Msk);
-    DMA1_Channel5->CCR |= header.enable_peripheral_increment
-                          << DMA_CCR_PINC_Pos;
-
-    DMA1_Channel5->CCR &= (DMA_CCR_CIRC_Msk);
-    DMA1_Channel5->CCR |= header.enable_circular_mode << DMA_CCR_CIRC_Pos;
-
-    DMA1_Channel5->CCR &= (DMA_CCR_DIR_Msk);
-    DMA1_Channel5->CCR |= header.data_transfer_direction << DMA_CCR_DIR_Pos;
-
-    DMA1_Channel5->CNDTR = header.data_number_transfer;
-
-    DMA1_Channel5->CMAR = (uint32_t)dma_uart_buffer;
-
-    DMA1_Channel5->CPAR = (uint32_t)(&USART1->DR);
-
-    this->configure_interrupts(header);
-    this->configure_priority(header);
-
-    DMA1_Channel5->CCR &= (DMA_CCR_EN_Msk);
-    DMA1_Channel5->CCR |= header.enable_channel << DMA_CCR_EN_Pos;
-  };
-
-  void start_dma() {
-    DMA1_Channel5->CCR &= (DMA_CCR_EN_Msk);
-    DMA1_Channel5->CCR |= 1 << DMA_CCR_EN_Pos;
-    // DMA1_Channel5->CCR |= DMA_CCR;
-  };
-};
-
-int main() {
-  uart_dma_header.enable_mem2mem = 0;
-  uart_dma_header.priority = 0;
-  uart_dma_header.enable_circular_mode = 1;
-  uart_dma_header.enable_mem_increment = 1;
-  uart_dma_header.enable_peripheral_increment = 0;
-
-  uart_dma_header.enable_transfer_cmpl_interrupt = 1;
-  uart_dma_header.peripheral_size = 0;
-  uart_dma_header.mem_size = 0;
-  uart_dma_header.enable_channel = 0;
-  uart_dma_header.data_transfer_direction = 0;
-
-  // adresses
-  uart_dma_header.memory_address = 0;
-  // uart_dma_header.peripheral_address = USART1->DR;
-  // uart_dma_header.memory_address = (uint32_t)dma_uart_buffer;
-  uart_dma_header.data_number_transfer = 10;
-
-  uart_header.baudrate = 3750;
-  uart_header.enable_transmitter = 1;
-  uart_header.enable_reciever = 1;
-  uart_header.enable_word_9bit = 0;
-  uart_header.enable_parity = 0;
-
-  uart_header.enable_reciever = 1;
-  uart_header.enable_transmitter = 1;
+int main(void) {
+  // Enable the system clock for USART1, DMA1, and GPIOA
+  RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
+  RCC->AHBENR |= RCC_AHBENR_DMA1EN;
+  RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
 
   clock_header.clock_control_INRQ.enable_HSE = 1;
   clock_header.clock_control_INRQ.enable_HSI = 1;
@@ -171,22 +60,49 @@ int main() {
   clock_header.clock_configuration_INRQ.AHB_prescaler = 0b1000;
 
   Clock().__init__(clock_header);
+  
+
+  // Configure USART1
+  // GPIOA->CRH = (GPIOA->CRH & ~GPIO_CRH_CNF9) | GPIO_CRH_CNF9_1; // USART1 TX as Push-Pull
+  //
+  GPIOA->CRH &= ~(GPIO_CRH_MODE9_Msk);
+  GPIOA->CRH |= GPIO_CRH_MODE9;
+  GPIOA->CRH &= ~(GPIO_CRH_CNF9_Msk);
+  GPIOA->CRH |= GPIO_CRH_CNF9_1;
+
+  GPIOA->CRH &= ~(GPIO_CRH_CNF10_0);
+  GPIOA->CRH |= GPIO_CRH_CNF10_1;
+  GPIOA->CRH &= ~(GPIO_CRH_MODE10);
+  GPIOA->ODR |= GPIO_ODR_ODR10;
+
+  USART1->BRR = 3750;
+  USART1->CR1 =
+      USART_CR1_UE | USART_CR1_TE | USART_CR1_RE; // Enable UART, TX, and RX
+                                                  //
+  // USART1->CR3 |= USART_CR3_DMAT;
+  USART1->CR3 |= USART_CR3_DMAR;
+
+  // // Configure DMA1 Channel 5 for USART1 RX
+  DMA1_Channel5->CPAR = (uint32_t)&USART1->DR;  // Source: UART1 DR
+  DMA1_Channel5->CMAR = (uint32_t)uartRxBuffer; // Destination: Buffer
+  DMA1_Channel5->CNDTR = BUFFER_SIZE; // Number of data items to transfer
+  DMA1_Channel5->CCR =
+      DMA_CCR_MINC | DMA_CCR_TCIE |
+      DMA_CCR_EN; // Memory increment, Transfer complete interrupt, Enable DMA
+
+  DMA1_Channel5->CCR |= DMA_CCR_CIRC;
+
+  // Enable the DMA interrupt for USART1 RX
+  NVIC_EnableIRQ(DMA1_Channel5_IRQn);
 
   SystemCoreClockUpdate();
   __IO uint32_t clock_value = SystemCoreClock;
 
-  Delay().__init__(36);
+  Delay().__init__(8);
 
-  UART().__init__(uart_header);
-  UART().enable_dma_rx();
-
-  DMA().__init__(uart_dma_header);
-  DMA().start_dma();
-
+  uint8_t msg[] = "fuck";
   while (1) {
-    // UART().transmit(dma_uart_buffer, sizeof(dma_uart_buffer));
-    Delay().wait(1000);
+    USART1_Transmit(uartRxBuffer, sizeof(uartRxBuffer));
+    Delay().wait(6000);
   }
-
-  return 0;
 }
